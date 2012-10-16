@@ -26,6 +26,9 @@
 //  THE SOFTWARE.
 //
 
+// To translate the strings, check this article
+// http://forums.macrumors.com/showthread.php?t=373834
+
 #import "PullToRefreshView.h"
 
 #define TEXT_COLOR	 [UIColor colorWithRed:(87.0/255.0) green:(108.0/255.0) blue:(137.0/255.0) alpha:1.0]
@@ -65,12 +68,15 @@
         [scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
         
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        // TODO: accept backgroundColor as parameter
 		self.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:241.0/255.0 blue:234.0/255.0 alpha:1.0];
         
 		lastUpdatedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 30.0f, self.frame.size.width, 20.0f)];
 		lastUpdatedLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		lastUpdatedLabel.font = [UIFont systemFontOfSize:12.0f];
+        // TODO: accept textColor as parameter
 		lastUpdatedLabel.textColor = TEXT_COLOR;
+        // TODO: accept shadowColor as parameter
 		lastUpdatedLabel.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
 		lastUpdatedLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 		lastUpdatedLabel.backgroundColor = [UIColor clearColor];
