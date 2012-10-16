@@ -31,8 +31,9 @@
 
 #import "PullToRefreshView.h"
 
-#define TEXT_COLOR	 [UIColor colorWithRed:(87.0/255.0) green:(108.0/255.0) blue:(137.0/255.0) alpha:1.0]
 #define FLIP_ANIMATION_DURATION 0.18f
+#define DEFAULT_TEXT_COLOR [UIColor colorWithRed:(87.0/255.0) green:(108.0/255.0) blue:(137.0/255.0) alpha:1.0]
+#define DEFAULT_SHADOW_COLOR [UIColor colorWithWhite:0.9f alpha:1.0f]
 
 
 @interface PullToRefreshView (Private)
@@ -60,6 +61,25 @@
 }
 
 - (id)initWithScrollView:(UIScrollView *)scroll {
+    return [self initWithScrollView:scroll
+                    backgroundColor:[UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0]
+                          textColor:DEFAULT_TEXT_COLOR
+                        shadowColor:DEFAULT_SHADOW_COLOR];
+}
+
+- (id)initWithScrollView:(UIScrollView *)scroll backgroundColor:(UIColor *)backgroundColor
+{
+    return [self initWithScrollView:scroll
+                    backgroundColor:backgroundColor
+                          textColor:DEFAULT_TEXT_COLOR
+                        shadowColor:DEFAULT_SHADOW_COLOR];
+}
+
+- (id)initWithScrollView:(UIScrollView *)scroll
+         backgroundColor:(UIColor *)backgroundColor
+               textColor:(UIColor *)textColor
+             shadowColor:(UIColor *)shadowColor
+{
     lastUpdate = [NSDate date]; // assumes that the data appeared when the tableview was created
     CGRect frame = CGRectMake(0.0f, 0.0f - scroll.bounds.size.height, scroll.bounds.size.width, scroll.bounds.size.height);
     
@@ -68,16 +88,13 @@
         [scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
         
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        // TODO: accept backgroundColor as parameter
-		self.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:241.0/255.0 blue:234.0/255.0 alpha:1.0];
+		self.backgroundColor = backgroundColor;
         
 		lastUpdatedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 30.0f, self.frame.size.width, 20.0f)];
 		lastUpdatedLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		lastUpdatedLabel.font = [UIFont systemFontOfSize:12.0f];
-        // TODO: accept textColor as parameter
-		lastUpdatedLabel.textColor = TEXT_COLOR;
-        // TODO: accept shadowColor as parameter
-		lastUpdatedLabel.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+		lastUpdatedLabel.textColor = textColor;
+		lastUpdatedLabel.shadowColor = shadowColor;
 		lastUpdatedLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 		lastUpdatedLabel.backgroundColor = [UIColor clearColor];
 		lastUpdatedLabel.textAlignment = UITextAlignmentCenter;
@@ -86,8 +103,8 @@
 		statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 48.0f, self.frame.size.width, 20.0f)];
 		statusLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		statusLabel.font = [UIFont boldSystemFontOfSize:13.0f];
-		statusLabel.textColor = TEXT_COLOR;
-		statusLabel.shadowColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+		statusLabel.textColor = textColor;
+		statusLabel.shadowColor = shadowColor;
 		statusLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
 		statusLabel.backgroundColor = [UIColor clearColor];
 		statusLabel.textAlignment = UITextAlignmentCenter;
