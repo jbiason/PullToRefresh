@@ -57,6 +57,7 @@
 }
 
 - (id)initWithScrollView:(UIScrollView *)scroll {
+    lastUpdate = [NSDate date]; // assumes that the data appeared when the tableview was created
     CGRect frame = CGRectMake(0.0f, 0.0f - scroll.bounds.size.height, scroll.bounds.size.width, scroll.bounds.size.height);
     
     if ((self = [super initWithFrame:frame])) {
@@ -64,7 +65,7 @@
         [scrollView addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:NULL];
         
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		self.backgroundColor = [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0];
+		self.backgroundColor = [UIColor colorWithRed:242.0/255.0 green:241.0/255.0 blue:234.0/255.0 alpha:1.0];
         
 		lastUpdatedLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 30.0f, self.frame.size.width, 20.0f)];
 		lastUpdatedLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -113,16 +114,20 @@
 #pragma mark Setters
 
 - (void)refreshLastUpdatedDate {
-    NSDate *date = [NSDate date];
-    
-	if ([delegate respondsToSelector:@selector(pullToRefreshViewLastUpdated:)])
-		date = [delegate pullToRefreshViewLastUpdated:self];
-    
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setLocale:[NSLocale currentLocale]];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     [formatter setTimeStyle:NSDateFormatterMediumStyle];
-    lastUpdatedLabel.text = [NSString stringWithFormat:@"Last Updated: %@", [formatter stringFromDate:date]];
+    lastUpdatedLabel.text = [NSString stringWithFormat:@"Última atualização: %@", [formatter stringFromDate:lastUpdate]];
+}
+
+- (void)setLastUpdate:(NSDate *)date
+{
+    if (date == nil)
+        return;
+    
+    lastUpdate = date;
+    [self refreshLastUpdatedDate];
 }
 
 - (void)setState:(PullToRefreshViewState)state_ {
@@ -130,14 +135,14 @@
     
 	switch (state) {
 		case PullToRefreshViewStateReady:
-			statusLabel.text = @"Release to refresh...";
+			statusLabel.text = @"Solte para atualizar...";
 			[self showActivity:NO animated:NO];
             [self setImageFlipped:YES];
             scrollView.contentInset = UIEdgeInsetsZero;
 			break;
             
 		case PullToRefreshViewStateNormal:
-			statusLabel.text = @"Pull down to refresh...";
+			statusLabel.text = @"Arraste para atualizar...";
 			[self showActivity:NO animated:NO];
             [self setImageFlipped:NO];
 			[self refreshLastUpdatedDate];
@@ -145,7 +150,7 @@
 			break;
             
 		case PullToRefreshViewStateLoading:
-			statusLabel.text = @"Loading...";
+			statusLabel.text = @"Carregando...";
 			[self showActivity:YES animated:YES];
             [self setImageFlipped:NO];
             scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
@@ -194,6 +199,7 @@
             [self setState:PullToRefreshViewStateNormal];
         }];
     }
+    [self setLastUpdate:[NSDate date]];
 }
 
 #pragma mark -

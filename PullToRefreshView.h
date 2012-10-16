@@ -44,11 +44,14 @@ typedef enum {
 	UILabel *statusLabel;
 	CALayer *arrowImage;
 	UIActivityIndicatorView *activityView;
+
+    NSDate *lastUpdate;
 }
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, weak) id<PullToRefreshViewDelegate> delegate;
 
+- (void)setLastUpdate:(NSDate *)date;
 - (void)refreshLastUpdatedDate;
 - (void)finishedLoading;
 - (void)setState:(PullToRefreshViewState)state_;
